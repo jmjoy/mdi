@@ -11,4 +11,10 @@ description = "Proc macros for `mdi`."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+proc-macro = true
+
 [dependencies]
+quote = "1.0.7"
+syn = { version = "1.0.38", features = ["full"] }
+proc-macro2 = "1.0.19"
