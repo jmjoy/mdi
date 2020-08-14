@@ -1,0 +1,14 @@
+[package]
+name = "mdi-macros"
+version = "0.0.0"
+authors = ["jmjoy <918734043@qq.com>"]
+edition = "2018"
+repository = "https://github.com/jmjoy/mdi"
+readme = "README.md"
+license = "MIT"
+keywords = ["di", "ioc"]
+description = "Proc macros for `mdi`."
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
