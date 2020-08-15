@@ -1,7 +1,9 @@
-use cache::Cache;
-use mdi::resolve;
+use mdi::{extern_di, resolve};
+
+extern_di!(cache);
+extern_di!(mailer);
 
 #[resolve]
-pub fn cache() -> impl Cache<String> {
-    cache::di::cache()
+pub fn name() -> &'static str {
+    "app"
 }

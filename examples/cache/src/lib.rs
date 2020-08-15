@@ -13,6 +13,7 @@ pub trait Serialize {}
 impl Serialize for String {}
 
 pub trait Cache<S: Serialize> {
+    fn adapter(&self) -> &'static str;
     fn get(&self, key: &str) -> Option<&S>;
     fn set(&mut self, key: &str, value: S, time: Duration);
 }
@@ -23,6 +24,10 @@ pub struct MyCache {
 }
 
 impl Cache<String> for MyCache {
+    fn adapter(&self) -> &'static str {
+        "MyCache"
+    }
+
     fn get(&self, key: &str) -> Option<&String> {
         self.inner.get(key).and_then(|(value, time)| {
             if &SystemTime::now() < time {

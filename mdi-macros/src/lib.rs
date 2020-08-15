@@ -93,3 +93,10 @@ pub fn resolve(_attr: TokenStream, input: TokenStream) -> TokenStream {
     code.extend::<TokenStream>(result.into());
     code
 }
+
+#[proc_macro]
+pub fn extern_di(input: TokenStream) -> TokenStream {
+    let ident = parse_macro_input!(input as Ident);
+    let result = quote! { pub use #ident::di::*; };
+    result.into()
+}

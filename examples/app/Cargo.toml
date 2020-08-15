@@ -12,3 +12,4 @@ publish = false
 [dependencies]
 mdi = { path = "../../mdi" }
 cache = { path = "../cache" }
+mailer = { path = "../mailer" }
