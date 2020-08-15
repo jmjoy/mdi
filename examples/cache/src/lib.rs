@@ -4,37 +4,37 @@
 pub mod di;
 
 use std::{
-    ffi::c_void,
-    fmt::{Debug, Display},
-    time::Duration,
+    collections::HashMap,
+    time::{Duration, SystemTime},
 };
-use mdi::inject;
 
 pub trait Serialize {}
 
 impl Serialize for String {}
 
 pub trait Cache<S: Serialize> {
-    fn get(&self, key: &str) -> &S;
+    fn get(&self, key: &str) -> Option<&S>;
     fn set(&mut self, key: &str, value: S, time: Duration);
 }
 
-pub struct MyCache;
-
-impl<S: Serialize> Cache<S> for MyCache {
-    fn get(&self, key: &str) -> &S {
-        todo!()
-    }
-    fn set(&mut self, key: &str, value: S, time: Duration) {
-        todo!()
-    }
+#[derive(Default)]
+pub struct MyCache {
+    inner: HashMap<String, (String, SystemTime)>,
 }
 
-#[inject]
-fn test_mdi(cache: impl Cache<String>) {
-    cache.get("some_key");
-}
+impl Cache<String> for MyCache {
+    fn get(&self, key: &str) -> Option<&String> {
+        self.inner.get(key).and_then(|(value, time)| {
+            if &SystemTime::now() < time {
+                Some(value)
+            } else {
+                None
+            }
+        })
+    }
 
-fn test_debug() -> Box<dyn Debug> {
-    Box::new("hello")
+    fn set(&mut self, key: &str, value: String, ttl: Duration) {
+        self.inner
+            .insert(key.to_owned(), (value, SystemTime::now() + ttl));
+    }
 }

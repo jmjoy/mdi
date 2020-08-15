@@ -9,7 +9,10 @@ use syn::{parse_macro_input, punctuated::Punctuated, FnArg, Ident, ItemFn, Pat};
 #[proc_macro]
 pub fn call(input: TokenStream) -> TokenStream {
     let ident = parse_macro_input!(input as Ident);
-    let ident = Ident::new(&format!("mdi_inject__{}", ident.to_string()), Span::call_site());
+    let ident = Ident::new(
+        &format!("mdi_inject__{}", ident.to_string()),
+        Span::call_site(),
+    );
     let result = quote! { #ident() };
     result.into()
 }
@@ -53,7 +56,7 @@ pub fn inject(_attr: TokenStream, input: TokenStream) -> TokenStream {
         #vis #sig {
             #ident(
                 #(#params),*
-            );
+            )
         }
     };
 

@@ -5,12 +5,14 @@ pub mod di;
 
 use cache::Cache;
 use mdi::{call, inject};
+use std::time::Duration;
 
 #[inject]
-fn get_cache(cache: impl Cache<String>) {
-    let c = cache.get("foo");
+fn get_cache(mut cache: impl Cache<String>) -> Option<String> {
+    cache.set("foo", "bar".to_owned(), Duration::from_secs(5));
+    cache.get("foo").map(|s| s.clone())
 }
 
 fn main() {
-    call!(get_cache);
+    dbg!(call!(get_cache));
 }
