@@ -6,6 +6,14 @@ use proc_macro2::Span;
 use quote::quote;
 use syn::{parse_macro_input, punctuated::Punctuated, FnArg, Ident, ItemFn, Pat};
 
+#[proc_macro]
+pub fn call(input: TokenStream) -> TokenStream {
+    let ident = parse_macro_input!(input as Ident);
+    let ident = Ident::new(&format!("mdi_inject__{}", ident.to_string()), Span::call_site());
+    let result = quote! { #ident() };
+    result.into()
+}
+
 #[proc_macro_attribute]
 pub fn inject(_attr: TokenStream, input: TokenStream) -> TokenStream {
     let input0 = input.clone();
@@ -17,7 +25,7 @@ pub fn inject(_attr: TokenStream, input: TokenStream) -> TokenStream {
 
     let ident = sig.ident.clone();
     sig.ident = Ident::new(
-        &format!("mdi__{}", sig.ident.to_string()),
+        &format!("mdi_inject__{}", sig.ident.to_string()),
         Span::call_site(),
     );
 
@@ -27,10 +35,10 @@ pub fn inject(_attr: TokenStream, input: TokenStream) -> TokenStream {
             FnArg::Typed(ty) => match ty.pat.as_ref() {
                 Pat::Ident(ident) => {
                     let ident = Ident::new(
-                        &format!("mdi__{}", ident.ident.to_string()),
+                        &format!("mdi_resolve__{}", ident.ident.to_string()),
                         Span::call_site(),
                     );
-                    params.push(quote! { #ident() });
+                    params.push(quote! { crate::di::#ident() });
                 }
                 _ => {}
             },
@@ -66,7 +74,7 @@ pub fn resolve(_attr: TokenStream, input: TokenStream) -> TokenStream {
     let vis = item_fn.vis;
 
     sig.ident = Ident::new(
-        &format!("mdi__{}", sig.ident.to_string()),
+        &format!("mdi_resolve__{}", sig.ident.to_string()),
         Span::call_site(),
     );
 

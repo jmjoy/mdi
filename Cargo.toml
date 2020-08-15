@@ -2,4 +2,9 @@
 members = [
     "mdi",
     "mdi-macros",
+
+    # Internal
+    "examples/app",
+    "examples/cache",
+    "examples/mailer",
 ]
